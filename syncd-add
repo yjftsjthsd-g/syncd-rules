@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+import json
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("source", help="file/location to sync from")
+parser.add_argument("destination", help="file/location to sync to")
+parser.add_argument("--rules", help="Specify an alternative rules file to use")
+parser.add_argument("-v", "--verbosity", action="count", help="Specify an increased verbosity level")
+
+
+args = parser.parse_args()
+
+#TODO handle new dest on existing src
+#TODO allow different old/new rules files?
+
+#first, pick a rules.json to use
+if args.rules:
+	rulesFile = args.rules
+else:
+	rulesFile = "/tmp/rules.json"
+if args.verbosity:
+	print("Using", args.rules, "as rules file")
+
+#TODO get the new rule from the command line
+#newSrc = "fake:///src"
+newSrc = args.source
+#newDests = ["fake:///dest"]
+newDests = [args.destination]
+
+#load existing rules
+oldRulesFile = open(rulesFile)
+myJsonArray= json.loads(oldRulesFile.read())
+oldRulesFile.close()
+
+if args.verbosity:
+	print("Original rules:")
+	print(myJsonArray)
+
+#make our alteration
+myJsonArray[newSrc] = newDests
+if args.verbosity:
+	print("New rules:")
+	print(myJsonArray)
+
+#output new rules file
+#open("testOut.json").write(json.dumps(myJsonArray))
+newRulesFile = open(rulesFile, "w")
+newRulesFile.write(json.dumps(myJsonArray, indent=3))
+newRulesFile.close()
+
+#announce our victory
+print("All done!")
