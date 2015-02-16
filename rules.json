@@ -1,0 +1,8 @@
+{
+   "dropbox:///syncdTest": [
+      "fs:///home/brian/tmp/synchere"
+   ],
+   "fs:///home/brian/tmp/synchere": [
+      "dropbox:///syncdTest"
+   ]
+}
