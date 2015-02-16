@@ -4,10 +4,13 @@ import json
 import argparse
 
 parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description="add a new syncd rule")
 parser.add_argument("source", help="file/location to sync from")
 parser.add_argument("destination", help="file/location to sync to")
 parser.add_argument("--rules", help="Specify an alternative rules file to use")
-parser.add_argument("-v", "--verbosity", action="count", help="Specify an increased verbosity level")
+parser.add_argument("-v", "--verbose", action="store_true", default=False, help="Specify an increased verbosity level")
+directionGroup = parser.add_mutually_exclusive_group()
+directionGroup.add_argument("--monodirectional", action="store_true")
 
 args = parser.parse_args()
 
@@ -19,25 +22,39 @@ if args.rules:
 	rulesFile = args.rules
 else:
 	rulesFile = "/tmp/rules.json"
-if args.verbosity:
+if args.verbose:
 	print("Using", args.rules, "as rules file")
 
 #get the new rule from the command line
 newSrc = args.source
-newDests = [args.destination]
+newDest = args.destination
+#newDests = [args.destination]
+if args.verbose:
+	print("Adding new rule:")
+	if args.monodirectional:
+		print(newSrc, "->", [newDest])
+		print("monodirectionally")
+	else:
+		print(newSrc, "->", [newDest])
+		print(newDest, "->", [newSrc])
+		print("bidirectionally")
 
 #load existing rules
 oldRulesFile = open(rulesFile)
 myJsonArray= json.loads(oldRulesFile.read())
 oldRulesFile.close()
 
-if args.verbosity:
+if args.verbose:
 	print("Original rules:")
 	print(myJsonArray)
 
 #make our alteration
-myJsonArray[newSrc] = newDests
-if args.verbosity:
+if args.monodirectional:
+	myJsonArray[newSrc] = [newDest]
+else:
+	myJsonArray[newSrc] = [newDest]
+	myJsonArray[newDest] = [newSrc]
+if args.verbose:
 	print("New rules:")
 	print(myJsonArray)
 
