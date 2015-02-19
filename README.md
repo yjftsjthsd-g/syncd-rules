@@ -1,5 +1,5 @@
 # syncd-rules
-python3 utils for manipulating syncd rules
+utils for manipulating syncd rules (mostly Python 3, sh as appropriate)
 
 ## syncd-add
 Adds a new src -> [dest] rule
