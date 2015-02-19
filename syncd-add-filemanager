@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+
+if test -n "$NEMO_SCRIPT_SELECTED_URIS"
+then
+	SRC=$NEMO_SCRIPT_SELECTED_URIS
+	echo nemo
+fi
+if test -n "$NAUTILUS_SCRIPT_SELECTED_URIS"
+then
+	SRC="$NAUTILUS_SCRIPT_SELECTED_URIS"
+	echo nautilus
+fi
+if test -z "$SRC" #fallback
+then
+	SRC="$1"
+	echo fallback
+fi
+
+if test -z "$SRC"
+then
+	echo ERROR: Source argument required
+	exit 1
+fi
+DEST="$(zenity --entry --text='Sync destination' --entry-text='fs:///anywhere')"
+
+echo src is "$1"
+echo destination is "$DEST"
+
+/home/brian/workspace/syncd-rules/syncd-add --rules /home/brian/workspace/syncd-rules/test.json "$SRC" "$DEST"
+
+env | grep URI #development information; this spits out available sources
