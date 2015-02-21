@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+
+import json
+import argparse
+import sys
+
+parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description="remove an existing syncd rule")
+parser.add_argument("source", help="source file/location to stop syncing from")
+parser.add_argument("--rules", help="Specify an alternative rules file to use")
+parser.add_argument("-v", "--verbose", action="store_true", default=False, help="Specify an increased verbosity level")
+parser.add_argument("--confirm", action="store_true", default=False, help="Confirm before removal")
+
+args = parser.parse_args()
+
+#TODO allow different old/new rules files?
+
+#first, pick a rules.json to use
+if args.rules:
+	rulesFile = args.rules
+else:
+	rulesFile = "/tmp/rules.json"
+if args.verbose:
+	print("Using", args.rules, "as rules file")
+
+#load existing rules
+oldRulesFile = open(rulesFile)
+myJsonArray= json.loads(oldRulesFile.read())
+oldRulesFile.close()
+
+if args.verbose:
+	print("Original rules:")
+	print(myJsonArray)
+
+#get the rule to remove from the command line
+oldSrc = args.source
+if oldSrc[0] == "/": #FIXME It would be nice if this worked on Windows
+	oldSrc = "file://" + oldSrc
+if args.verbose or args.confirm:
+	print("Removing rule:")
+	print(oldSrc, "->", myJsonArray[oldSrc])
+
+#confirm (optional)
+if args.confirm:
+	print("Continue?")
+	if not input().lower() in ["yes", "y", ""]:
+		sys.exit(1)
+
+#make our alteration
+oldDest = myJsonArray.pop(oldSrc)
+#TODO handle bidirectional rules
+# if args.monodirectional:
+# 	myJsonArray[newSrc] = [newDest]
+# else:
+# 	myJsonArray[newSrc] = [newDest]
+# 	myJsonArray[newDest] = [newSrc]
+if args.verbose:
+	print("New rules:")
+	print(myJsonArray)
+
+#output new rules file
+#open("testOut.json").write(json.dumps(myJsonArray))
+newRulesFile = open(rulesFile, "w")
+newRulesFile.write(json.dumps(myJsonArray, indent=3))
+newRulesFile.close()
+
+#announce our victory
+print("All done!")
