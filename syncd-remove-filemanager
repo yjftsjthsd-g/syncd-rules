@@ -21,11 +21,13 @@ then
 	echo ERROR: Source argument required
 	exit 1
 fi
-DEST="$(zenity --entry --text='Sync destination' --entry-text='file:///anywhere')"
+#DEST="$(zenity --entry --text='Sync destination' --entry-text='fs:///anywhere')"
 
 echo src is "$1"
-echo destination is "$DEST"
 
-/home/brian/workspace/syncd-rules/syncd-add --rules /home/brian/workspace/syncd-rules/test.json "$SRC" "$DEST"
+zenity --question --text="Stop syncing from $1?" || exit 1
+
+#TODO allow once verified
+/home/brian/workspace/syncd-rules/syncd-remove --rules /home/brian/workspace/syncd-rules/test.json "$SRC"
 
 env | grep URI #development information; this spits out available sources
