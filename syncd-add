@@ -29,6 +29,9 @@ if args.verbose:
 newSrc = args.source
 newDest = args.destination
 #newDests = [args.destination]
+#handle raw filesystem location
+if newSrc[0] == "/": #FIXME It would be nice if this worked on Windows
+	newSrc = "file://" + newSrc
 if args.verbose:
 	print("Adding new rule:")
 	if args.monodirectional:
