@@ -1,0 +1,3 @@
+#!/bin/sh
+#TODO: rewrite this in portable python
+killall -u $USER syncd && syncd
