@@ -2,6 +2,7 @@
 
 import json
 import argparse
+import os
 
 parser = argparse.ArgumentParser()
 parser = argparse.ArgumentParser(description="add a new syncd rule")
@@ -21,7 +22,10 @@ args = parser.parse_args()
 if args.rules:
 	rulesFile = args.rules
 else:
-	rulesFile = "/tmp/rules.json"
+	userConfigDir = os.getenv('XDG_CONFIG_HOME', default=os.path.join(os.path.expanduser('~'), '.config'))
+	syncdConfigDir = os.path.join(userConfigDir, "syncd")
+	#rulesFile = "/tmp/rules.json"
+	rulesFile = os.path.join(syncdConfigDir, "rules.json")
 if args.verbose:
 	print("Using", args.rules, "as rules file")
 
