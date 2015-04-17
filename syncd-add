@@ -16,9 +16,6 @@ parser.add_argument("--norestart", action="store_true", default=False, help="Do 
 
 args = parser.parse_args()
 
-#TODO handle new dest on existing src
-#TODO allow different old/new rules files?
-
 #first, pick a rules.json to use
 #this really should be a function in a utility class
 if args.rules:
