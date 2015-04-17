@@ -3,6 +3,7 @@
 import json
 import argparse
 import sys
+import os
 
 parser = argparse.ArgumentParser()
 parser = argparse.ArgumentParser(description="remove an existing syncd rule")
@@ -18,10 +19,10 @@ args = parser.parse_args()
 if args.rules:
 	rulesFile = args.rules
 else:
-»··userConfigDir = os.getenv('XDG_CONFIG_HOME', default=os.path.join(os.path.expanduser('~'), '.config'))
-»··syncdConfigDir = os.path.join(userConfigDir, "syncd")
-»··#rulesFile = "/tmp/rules.json"
-»··rulesFile = os.path.join(syncdConfigDir, "rules.json")
+	userConfigDir = os.getenv('XDG_CONFIG_HOME', default=os.path.join(os.path.expanduser('~'), '.config'))
+	syncdConfigDir = os.path.join(userConfigDir, "syncd")
+	#rulesFile = "/tmp/rules.json"
+	rulesFile = os.path.join(syncdConfigDir, "rules.json")
 if args.verbose:
 	print("Using", args.rules, "as rules file")
 
@@ -67,9 +68,9 @@ newRulesFile.write(json.dumps(myJsonArray, indent=3))
 newRulesFile.close()
 
 if args.norestart:
-»··pass
+	pass
 else:
-»··os.system("syncd-restart")
+	os.system("syncd-restart")
 
 #announce our victory
 print("All done!")
