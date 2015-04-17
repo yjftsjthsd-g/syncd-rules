@@ -16,10 +16,14 @@ args = parser.parse_args()
 #TODO allow different old/new rules files?
 
 #first, pick a rules.json to use
+#this really should be a function in a utility class
 if args.rules:
 	rulesFile = args.rules
 else:
-	rulesFile = "/tmp/rules.json"
+»··userConfigDir = os.getenv('XDG_CONFIG_HOME', default=os.path.join(os.path.expanduser('~'), '.config'))
+»··syncdConfigDir = os.path.join(userConfigDir, "syncd")
+»··#rulesFile = "/tmp/rules.json"
+»··rulesFile = os.path.join(syncdConfigDir, "rules.json")
 if args.verbose:
 	print("Using", args.rules, "as rules file")
 
